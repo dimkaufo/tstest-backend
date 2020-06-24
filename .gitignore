@@ -1,0 +1,12 @@
+# Mac os
+.DS_Store
+
+# IntelliJ IDEA
+.idea
+
+# Logs
+*.log
+
+# App files
+dist/
+node_modules/

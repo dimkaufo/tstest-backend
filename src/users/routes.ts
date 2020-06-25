@@ -5,13 +5,27 @@ import * as bcrypt from "bcrypt";
 import {userRepository} from "../common/repositories";
 
 import config from "../common/config";
+import {UserSettings} from "./model";
 
-export type ApiResponse = {
+export type ApiResponse<T> = {
     error?: string,
-    data?: any,
+    data?: T,
 };
 
-export const login = function(req: Request, res: Response<ApiResponse>) {
+type LoginResponseData = {
+    accessToken: string,
+};
+
+type CurrentUserResponseData = {
+    id: string,
+    email: string,
+    firstName: string,
+    lastName: string,
+    settings: UserSettings,
+    data: string,
+};
+
+export const login = function(req: Request, res: Response<ApiResponse<LoginResponseData>>) {
     const {email, password} = req.body;
 
     const user = userRepository.findByEmail(email);
@@ -29,7 +43,7 @@ export const login = function(req: Request, res: Response<ApiResponse>) {
     });
 };
 
-export const register = function(req: Request, res: Response<ApiResponse>) {
+export const register = function(req: Request, res: Response<ApiResponse<boolean>>) {
     const user = userRepository.create({
         email: req.body.email,
         firstName: req.body.firstName,
@@ -51,7 +65,7 @@ export const register = function(req: Request, res: Response<ApiResponse>) {
     });
 };
 
-export const me = function(req: Request, res: Response<ApiResponse>) {
+export const me = function(req: Request, res: Response<ApiResponse<CurrentUserResponseData>>) {
     let user = userRepository.findOne(req.userId);
     if (user === null) {
         res.status(401).json({
@@ -71,7 +85,7 @@ export const me = function(req: Request, res: Response<ApiResponse>) {
     });
 };
 
-export const changeSettings = function(req: Request, res: Response<ApiResponse>) {
+export const changeSettings = function(req: Request, res: Response<ApiResponse<UserSettings>>) {
     let user = userRepository.findOne(req.userId);
     if (user === null) {
         res.status(401).json({

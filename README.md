@@ -1,7 +1,7 @@
 # tstest-backend
 Test Task Backend
 
-# Steps
+# HowTo
 To run server just do:
 
 ```
